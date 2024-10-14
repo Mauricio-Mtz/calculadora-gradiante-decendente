@@ -1,0 +1,174 @@
+/* Colores y tipografías base */
+:root {
+    --background-color: rgb(24, 36, 64);
+    --form-background-color: rgb(37, 47, 79);
+    --input-background-color: rgb(55, 65, 90);
+    --button-color: rgb(97, 218, 251);
+    --text-color: #ffffff;
+    --heading-color: #ffffff;
+    --input-text-color: #ffffff;
+    --button-hover-color: rgb(77, 198, 241);
+    --border-color: rgb(97, 218, 251);
+    --button-text-color: #ffffff;
+    --result-background-color: rgba(255, 255, 255, 0.1);
+    --font-family: 'Arial', sans-serif;
+    --result-text-color: #ffcc00;
+}
+
+/* Estilo general del cuerpo */
+body {
+    margin: 0;
+    padding: 20px 0 20px 0;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Título principal */
+h1 {
+    color: var(--heading-color);
+    font-size: 2.1rem;
+    margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.514);
+    padding: 15px 0 15px 0;
+    max-width: 100%;
+    text-align: center;
+    width: 100%;
+}
+
+/* Corregir el selector de la clase calculator-container */
+.calculator-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1000px;
+    width: 100%;
+    gap: 20px; /* Espacio entre los dos elementos */
+}
+
+/* Estilo del formulario */
+form {
+    background-color: var(--form-background-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    width: 100%;
+    
+}
+
+/* Estilo para contenedor de las ecuaciones */
+.equation-container {
+    padding: 0px 20px; /* Reducido para ajustar mejor el contenido */
+    max-width: 800px;
+    width: 100%;
+}
+
+/* Estilo de las ecuaciones */
+.equation-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    vertical-align: middle;
+    margin-bottom: 10px;
+}
+
+/* Estilo de los números en las ecuaciones */
+.equation-row input {
+    width: 50px;
+    padding: 5px;
+    font-size: 1rem;
+    text-align: center;
+    background-color: var(--input-background-color);
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    color: var(--input-text-color);
+}
+
+/* Estilo de los operadores y variables (x, y, =) */
+.equation-row span {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin: 0 5px;
+    display: flex;
+}
+
+/* Botón para enviar el formulario */
+.button {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.button:hover {
+    background-color: var(--button-hover-color);
+}
+
+/* Botón para enviar el + */
+.btnM {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    width: auto;
+}
+
+.btnM:hover {
+    background-color: var(--button-hover-color);
+}
+
+/* Sección de resultados */
+#result {
+    background-color: var(--result-background-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    width: 100%;
+    text-align: left;
+    flex: 1; /* Permite que el área de resultados ocupe una parte del espacio */
+}
+
+
+  
+  .result-box {
+    padding: 15px;
+    background-color: #293247;
+    border-left: 5px solid #4a90e2;
+    margin-bottom: 20px;
+    border-radius: 5px;
+  }
+  
+  .procedure-list {
+    list-style-type: decimal;
+    padding-left: 20px;
+  }
+  
+  .procedure-list li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #293247;
+    border-radius: 5px;
+    border-left: 4px solid #4a90e2;
+    text-align: left;
+  }
+  
+  .procedure-list li:hover {
+    background-color: #293247;
+  }

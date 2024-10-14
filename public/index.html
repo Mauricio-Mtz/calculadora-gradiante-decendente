@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resolver Ecuaciones Lineales</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <h1>Calculadora de Gradiente descendente</h1>
+  <div class="calculator-container">
+    <form id="equation-form">
+      <h3>Ecuaciones</h3>
+      <div class="equation-container">
+        <div class="equation-row">
+          <!-- <span> x </span> = <input type="text" id="x" required>,
+          <span> y </span> = <input type="text" id="y" required>, -->
+          <span> m </span> = <input type="text" id="m" required>,
+          <span> b </span> = <input type="text" id="b" required>,
+          <span> o </span> = <input type="text" id="o" required>
+          
+        </div>
+        
+        <div class="equation-row" style="margin-top: 20px;">
+          <span style="margin-left: 10px;">(</span>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+              <label for="x" style="margin-bottom: 5px;">x</label>
+              <input type="text" id="x">
+          </div>
+          <span style="margin: 0 10px;">,</span>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+              <label for="y" style="margin-bottom: 5px;">y</label>
+              <input type="text" id="y">
+          </div>
+          <span style="margin-left: 10px;">)</span>
+          <button type="button" id="add-coordinate-btn" class="btnM" style="margin-left: 10px;">+</button>
+        </div>
+      
+      
+        <div class="equation-row">
+          
+        </div>
+
+        
+
+        <!-- Aquí se mostrará la lista de coordenadas -->
+        <div class="coordinate-list-container">
+          <h3>Coordenadas:</h3>
+          <ul id="coordinate-list"></ul>
+        </div>
+        
+       
+      </div>
+
+      <button class="button" type="submit">Resolver</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const coordinates = []; // Variable para almacenar las coordenadas
+    // Función para agregar coordenadas a la lista
+    document.getElementById('add-coordinate-btn').addEventListener('click', function() {
+      const x = document.getElementById('x').value;
+      const y = document.getElementById('y').value;
+
+      if (x !== "" && y !== "") {
+        // Añadir la coordenada a la variable
+        coordinates.push({ x: parseFloat(x), y: parseFloat(y) });
+
+        // Limpiar los inputs de x e y
+        document.getElementById('x').value = '';
+        document.getElementById('y').value = '';
+
+        // Actualizar la lista de coordenadas
+        updateCoordinateList();
+        console.log(coordinates)
+      } else {
+        alert("Por favor ingresa valores válidos para x e y.");
+      }
+    });
+
+    // Función para actualizar la lista de coordenadas
+    function updateCoordinateList() {
+      const coordinateList = document.getElementById('coordinate-list');
+      coordinateList.innerHTML = ''; // Limpiar lista anterior
+
+      // Renderizar las coordenadas
+      coordinates.forEach((coord, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `(${coord.x}, ${coord.y})`;
+        coordinateList.appendChild(listItem);
+      });
+    }
+
+    // // Función para enviar m, b, o y las coordenadas
+    // document.getElementById('submit-equation-btn').addEventListener('click', function() {
+    //   const m = document.getElementById('m').value;
+    //   const b = document.getElementById('b').value;
+    //   const o = document.getElementById('o').value;
+
+    //   if (m !== "" && b !== "" && o !== "") {
+    //     alert(`Valores recibidos:\nm = ${m}, b = ${b}, o = ${o}\nCoordenadas: ${JSON.stringify(coordinates)}`);
+    //   } else {
+    //     alert("Por favor ingresa valores válidos para m, b y o.");
+    //   }
+     
+    // });
+
+
+    // Mostrar el contenedor de resultados al enviar el formulario
+    document.getElementById('result').hidden = true;
+
+    // Validación para permitir solo números enteros, decimales o fracciones
+    function validateInput(event) {
+      const key = event.key;
+      const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.','-','Enter', 'Delete', 'ArrowLeft', 'ArrowRight'];
+      
+      // Bloquear cualquier tecla que no esté en allowedKeys
+      if (!allowedKeys.includes(key) && event.key !== "Backspace" && event.key !== "Tab") {
+        event.preventDefault();
+      }
+    }
+
+    // Asignar validación a los inputs
+    const inputs = document.querySelectorAll('input[type="text"]');
+    inputs.forEach(input => {
+      input.addEventListener('keydown', validateInput);
+    });
+
+
+
+    document.getElementById('equation-form').addEventListener('submit', function(event) {
+      document.getElementById('result').hidden = false;
+      event.preventDefault(); // Evita recargar la página al enviar el formulario
+
+      let m = document.getElementById('m').value;
+      let b = document.getElementById('b').value;
+      let o = document.getElementById('o').value;
+
+      // Comprobar si hay coordenadas
+      if (coordinates.length === 0) {
+        alert("No se han agregado coordenadas.");
+        return;
+      }
+      
+
+      const data = {
+        m: m,
+        b: b,
+        o: o,
+        coordinates: coordinates  // Este es un array de coordenadas [{x: 1, y: 2}, {x: 3, y: 4}]
+      };
+
+      
+      // Llamar a la ruta en el servidor para resolver la ecuación
+      fetch('/solve', {method: 'POST',headers: {  'Content-Type': 'application/json'},body: JSON.stringify(data)})
+      .then(response => response.json())
+      .then(data => {
+        console.log('Resultado:', data); // Mostrar el resultado recibido
+
+        let stepsHtml = `<h2>Procedimiento:</h2><ol class="procedure-list">`;
+
+        // Asegúrate de que data.data es la propiedad correcta que contiene los pasos
+        stepsHtml += `<li>`
+        data.data.forEach((step, index )=> {
+          stepsHtml += `${step} <br>`;
+        });
+        stepsHtml +=`</li>`
+
+        stepsHtml += `<li>`;
+        data.m.forEach((m, index )=> {
+          stepsHtml += `${m} <br> <br>`;
+        });
+        stepsHtml += `</li>`;
+        
+        stepsHtml += `<li>`;
+        data.b.forEach((b, index )=> {
+          stepsHtml += `${b} <br> <br>`;
+        });
+        stepsHtml += `</li>`;
+        
+
+        stepsHtml += `</ol>`;
+
+        document.getElementById('result').innerHTML = `
+            <h2>Resultado:</h2>
+            <div class="result-box">
+                <p><strong>m = ${data.mFinal}</strong></p>
+                <p><strong>b = ${data.bFinal}</strong></p>
+            </div>
+            ${stepsHtml}
+        `;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>
